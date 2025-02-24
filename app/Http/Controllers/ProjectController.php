@@ -71,11 +71,28 @@ class ProjectController extends Controller
         }
     }
 
-    public function show(Project $project)
+    public function show(Request $request, Project $project)
     {
         $this->authorize('view', $project);
 
+        // Récupérer le filtre depuis l'URL, 'all' par défaut
+        $filter = $request->query('filter', 'all');
+
+        // Préparer la relation tasks avec le filtre
+        $tasksRelation = function ($query) use ($filter) {
+            switch ($filter) {
+                case 'pending':
+                    $query->where('status', 'en_cours');
+                    break;
+                case 'completed':
+                    $query->where('status', 'termine');
+                    break;
+            }
+        };
+
+        // Charger les relations avec le filtre appliqué
         $project->load([
+            'tasks' => $tasksRelation,
             'tasks.assignedTo',
             'tasks.files',
             'members',
@@ -170,7 +187,7 @@ class ProjectController extends Controller
 
     public function updateStatus(Request $request, Project $project)
     {
-        $this->authorize('update', $project);
+        $this->authorize('updateStatus', $project);
 
         $validated = $request->validate([
             'status' => 'required|in:en_attente,en_cours,termine'

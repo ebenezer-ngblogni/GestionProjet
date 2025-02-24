@@ -40,9 +40,22 @@ class TaskPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Task $task): bool
+    public function update(User $user, Task $task)
     {
-        return false;
+        return $user->id === $task->assigned_to // si l'utilisateur est assigné à la tâche
+            || $user->id === $task->project->user_id;  // OU si c'est le propriétaire du projet
+    }
+
+    public function complete(User $user, Task $task)
+    {
+        return $user->id === $task->assigned_to
+            || $user->id === $task->project->user_id;
+    }
+
+    public function updateStatus(User $user, Project $project)
+    {
+        return $user->id === $project->user_id
+            || $project->members->contains($user->id);
     }
 
     /**
@@ -68,4 +81,6 @@ class TaskPolicy
     {
         return false;
     }
+
+
 }

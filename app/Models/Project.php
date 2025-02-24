@@ -37,7 +37,7 @@ class Project extends Model
 
     public function completedTasks()
     {
-        return $this->hasMany(Task::class)->where('status', 'terminee');
+        return $this->hasMany(Task::class)->where('status', 'termine');
     }
 
     public function activities()

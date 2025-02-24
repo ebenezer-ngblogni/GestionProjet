@@ -26,7 +26,7 @@ class TaskController extends Controller
             'description' => 'required',
             'due_date' => 'required|date|after:today',
             'assigned_to' => 'nullable|exists:users,id',
-            'status' => 'required|in:en_cours,terminee,suspendue',
+            'status' => 'required|in:en_cours,termine,en_attente',
             'files.*' => 'nullable|file|max:10240' // 10MB max
         ]);
 
@@ -83,7 +83,7 @@ class TaskController extends Controller
             'description' => 'required',
             'due_date' => 'required|date',
             'assigned_to' => 'nullable|exists:users,id',
-            'status' => 'required|in:en_cours,terminee,suspendue',
+            'status' => 'required|in:en_cours,termine,en_attente',
             'files.*' => 'nullable|file|max:10240'
         ]);
 
@@ -139,10 +139,10 @@ class TaskController extends Controller
 
     public function complete(Task $task)
     {
-        $this->authorize('update', $task);
+        $this->authorize('complete', $task);
 
         $task->update([
-            'status' => 'terminee',
+            'status' => 'termine',
             'completed_at' => now()
         ]);
 

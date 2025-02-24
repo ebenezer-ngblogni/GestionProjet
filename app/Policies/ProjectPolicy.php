@@ -15,7 +15,7 @@ class ProjectPolicy
      */
     public function viewAny(User $user): bool
     {
-        return true; 
+        return true;
     }
 
     /**
@@ -43,6 +43,12 @@ class ProjectPolicy
             ->where('user_id', $user->id)
             ->where('project_members.role', 'admin')
             ->exists();
+    }
+
+    public function updateStatus(User $user, Project $project)
+    {
+        return $user->id === $project->user_id
+            || $project->members->contains($user->id);
     }
 
     /**

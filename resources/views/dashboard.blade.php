@@ -98,7 +98,7 @@
                                             <span class="px-2 py-1 text-xs rounded-full
                                                 {{ $project->status === 'en_cours' ? 'bg-green-100 text-green-800' : '' }}
                                                 {{ $project->status === 'en_attente' ? 'bg-yellow-100 text-yellow-800' : '' }}
-                                                {{ $project->status === 'terminee' ? 'bg-gray-100 text-gray-800' : '' }}">
+                                                {{ $project->status === 'termine' ? 'bg-gray-100 text-gray-800' : '' }}">
                                                 {{ ucfirst($project->status) }}
                                             </span>
                                         </div>

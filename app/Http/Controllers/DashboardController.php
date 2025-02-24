@@ -47,7 +47,7 @@ class DashboardController extends Controller
                     $q->where('user_id', $user->id);
                 });
             })
-            ->where('status', 'terminee')
+            ->where('status', 'termine')
             ->where('completed_at', '>=', Carbon::now()->subWeek())
             ->count()
         ];
@@ -71,7 +71,7 @@ class DashboardController extends Controller
         // Tâches assignées à l'utilisateur
         $assignedTasks = Task::with('project')
             ->where('assigned_to', $user->id)
-            ->where('status', '!=', 'terminee')
+            ->where('status', '!=', 'termine')
             ->orderBy('due_date')
             ->take(5)
             ->get();
@@ -116,7 +116,7 @@ class DashboardController extends Controller
 
         $stats = [
             'totalTasks' => $project->tasks()->count(),
-            'completedTasks' => $project->tasks()->where('status', 'terminee')->count(),
+            'completedTasks' => $project->tasks()->where('status', 'termine')->count(),
             'pendingTasks' => $project->tasks()->where('status', 'en_cours')->count(),
             'membersCount' => $project->members()->count(),
             'filesCount' => $project->tasks()->withCount('files')->get()->sum('files_count'),
@@ -125,7 +125,7 @@ class DashboardController extends Controller
 
         // Progression par semaine
         $weeklyProgress = $project->tasks()
-            ->where('status', 'terminee')
+            ->where('status', 'termine')
             ->groupBy('completed_at')
             ->selectRaw('DATE(completed_at) as date, count(*) as completed')
             ->get()
